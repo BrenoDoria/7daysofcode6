@@ -1,0 +1,110 @@
+<meta charset="UTF-8">
+<script type="text/javascript" src="./script.js" defer></script>
+<meta charset="UTF-8">
+
+<body>
+
+    <h1><center>Lista de Compras</center></h1>
+
+    <div id="addItems">
+
+        <label for="item"><center>Digite o item que deseja inserir!</center></label><br>
+        <center><input type="text" id="item" placeholder="Ex: Maça, Picanha,etc.." autofocus></input></center>
+
+        <br><br>
+
+        <label for="categoria"><center>Qual Setor?</center></label><br>
+        <center><select name="categoria" id="categoria" required onchange="Liberar()"></center>
+            <option value="" selected disabled><center>Categorias</center></option>
+        </select>
+
+        <input type="button" id="btnInserir" disabled value="Inserir" onclick="Inserir()">
+
+    </div>
+    <br>
+    <div id='listaCompras'></div>
+</body>
+
+
+
+
+
+<script>
+var item = document.getElementById("item");
+var btnInserir = document.getElementById('btnInserir')
+
+
+var listaCompras = document.getElementById('listaCompras')
+var listaHor = [];
+var listaFri = [];
+var listaCar = [];
+var listaMer = [];
+var listaBeb = [];
+var listaHig = [];
+var listas = [listaHor, listaFri, listaCar, listaMer, listaBeb, listaHig];
+
+var categoria = document.getElementById("categoria");
+var categorias = [
+    "Hortifruti",
+    "Frios e Laticínios",
+    "Açougue",
+    "Mercearia",
+    "Bebidas",
+    "Higiene",
+    "Limpeza",
+];
+
+criarCategorias();
+
+function criarCategorias() {
+    for (var i = 0; i < categorias.length; i++) {
+        var opt = document.createElement("option");
+        opt.value = i;
+        opt.innerHTML = categorias[i];
+        categoria.appendChild(opt);
+    }
+}
+
+function Inserir() {
+    var select = document.getElementById("categoria");
+    var option = select.options[select.selectedIndex].value;
+
+    if (item.value == "") {
+        alert("Por favor, adicione um item!");
+    } else {
+        listas[option].push(item.value)
+    }
+    imprimirLista()
+}
+
+function imprimirLista() {
+    listaCompras.innerHTML = ''
+    var div = document.createElement('div');
+
+    for (var j = 0; j < categorias.length; j++) {
+        if (listas[j].length > 0) {
+            div.innerHTML += `${categorias[j]} <ol>`
+            for (var i = 0; i < listas[j].length; i++) {
+                div.innerHTML += `<li>${listas[j][i]} <input type='button' onclick="Remover('${listas[j][i]}')" value='x'><br><br>`
+            }
+        }
+    }
+    listaCompras.appendChild(div)
+    item.value = ''
+    item.focus()
+}
+
+function Remover(elemento) {
+    for (var i = 0; i < categorias.length; i++) {
+        var itemRemover = listas[i].indexOf(elemento)
+        if (itemRemover != -1) {
+            listas[i].splice(itemRemover, 1)
+        }
+    }
+    imprimirLista()
+}
+
+function Liberar() {
+    btnInserir.disabled = false
+}
+</script>
